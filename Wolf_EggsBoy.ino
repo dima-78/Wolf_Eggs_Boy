@@ -1,8 +1,13 @@
+/*
+Created by Dmitry-78 
+09.2023
+game_test Wolf&Eggs_Boy for Arduboy/ArduboyFX
+will be supplemented..
+*/
+
 #include <Arduboy2.h>
-//#include <Arduboy.h>
 #include <ArduboyTones.h>
 #include "Tinyfont.h"
-
 //#include <avr/pgmspace.h>
 
 Arduboy2 arduboy;
@@ -183,26 +188,6 @@ const uint8_t PROGMEM rabit_6[] = {//40, 40,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02, 0x04, 0x04, 0x05, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x28, 0x24, 0x12, 0x11, 0x70, 0xd0, 0xc8, 0x09, 0x06,
 };
 
-
-
-/*
-  const size_t ARRAY_SIZE = sizeof(WolfLeft);
-  uint8_t WolfRight[ARRAY_SIZE];
-
-  void mirrorArray(const uint8_t* sourceArray, uint8_t* destinationArray, size_t arraySize) {
-  size_t rowSize = ARRAY_SIZE / 5;
-
-  for (size_t row = 0; row < 5; row++) {
-    for (size_t col = 0; col < rowSize; col++) {
-      size_t sourceIndex = (row * rowSize) + col;
-      size_t destinationIndex = (row * rowSize) + (rowSize - 1 - col);
-      destinationArray[destinationIndex] = sourceArray[sourceIndex];
-    }
-  }
-  }
-*/
-
-
 const uint8_t* rabbits[] = {
   rabit_1,
   rabit_2,
@@ -251,7 +236,6 @@ void setup() {
   }
 
   multik();
-  //mirrorArray(WolfLeft, WolfRight_rev, ARRAY_SIZE);
   delay(1000);
   callingRabbit();
 
@@ -265,74 +249,15 @@ void loop() {
 
   border;
   shelvesLines();
-
   arduboy.pollButtons();
-
   ////debug
   // arduboy.drawBitmap(0, 0, HandLeftUp, 27, 24, 1);
   // arduboy.drawBitmap(0, 38, HandLeftDown, 26, 24, 1);
   // arduboy.drawBitmap(100, 0, HandRightUp, 25, 26, 1);
   // arduboy.drawBitmap(100, 38, HandRightDown, 29, 24, 1);
-
-  /*
-    int currentIndex = 0;
-
-    for (;;) {
-      if (currentIndex == 0) {
-        clearHandLeftUp(); // стирание предыдущего спрайта
-        clearWolfLeft(); // стирание предыдущего спрайта
-        arduboy.drawBitmap(25, 20, HandLeftUp, 27, 24, 1);
-        arduboy.drawBitmap(39, 16, WolfLeft, 31, 48, 1);
-      } else if (currentIndex == 1) {
-        clearHandLeftDown(); // стирание предыдущего спрайта
-        arduboy.drawBitmap(27, 37, HandLeftDown, 26, 24, 1);
-      } else if (currentIndex == 2) {
-        clearHandRightUp(); // стирание предыдущего спрайта
-        clearWolfRight(); // стирание предыдущего спрайта
-        arduboy.drawBitmap(77, 22, HandRightUp, 25, 26, 1);
-        arduboy.drawBitmap(53, 16, WolfRight, 27, 48, 1);
-      } else if (currentIndex == 3) {
-        clearHandRightDown(); // стирание предыдущего спрайта
-        arduboy.drawBitmap(74, 40, HandRightDown, 27, 21, 1);
-      }
-
-      delay(1000);
-
-      currentIndex++;
-
-      if (currentIndex > 3) {
-        currentIndex = 0;
-      }
-  */
-
   wolfMovements();
-
-
   arduboy.display();
 }
-
-
-/*
-  for (int i = 2; i < sizeof(WolfRight); i += 2) {
-    uint8_t x = pgm_read_byte(&WolfRight[i]);
-    uint8_t y = pgm_read_byte(&WolfRight[i + 1]);
-    arduboy.drawPixel(x, y);
-  }
-*/
-
-/*
-  for (int i = 2; i < sizeof(WolfRight); i += 2) {
-    uint8_t x1 = pgm_read_byte(&WolfRight[i - 2]);
-    uint8_t y1 = pgm_read_byte(&WolfRight[i - 1]);
-    uint8_t x2 = pgm_read_byte(&WolfRight[i]);
-    uint8_t y2 = pgm_read_byte(&WolfRight[i + 1]);
-    arduboy.drawLine(x1, y1, x2, y2);
-  }
-*/
-
-//arduboy.display();
-//}
-
 
 void startScreen() {
   //border;
@@ -483,168 +408,59 @@ void multik() {
   }
 }
 
-/*
-void brokenEggLeft() {
-//brokenEggLEFT[];
-arduboy.drawBitmap(53, 50, eggLeft_Right, 10, 12);
-arduboy.drawBitmap(53, 50, eggLeft_2, 11, 10);
-arduboy.drawBitmap(39, 50, eggLeft_3, 14, 13);
-arduboy.drawBitmap(25, 50, eggLeft_4, 13, 10);
-arduboy.drawBitmap(12, 50, eggLeft_5, 11, 10);
-arduboy.drawBitmap(0, 50, eggLeft_6, 12, 12);
-arduboy.display();
-}
-*/
-
-
-// Функция для отрисовки мультика
-
 void eggAnimationLeft() {
-    // Количество кадров анимации
     const int numFrames = 6;
-    // Размер каждого кадра
-    //const int frameWidth = 12;
-    //const int frameHeight = 12;
     int timeDelay = 450;
-    // Координаты для отображения каждого кадра
     int frameX[numFrames] = { 53, 53, 39, 25, 12, 0 };
     int frameY[numFrames] = { 50, 50, 50, 50, 50, 50 };
-
     int frameWidth[numFrames] = {10, 11, 14, 13, 11, 12};
     int frameHeight[numFrames] = {12, 10, 13, 10, 10, 12};
     
-    // Длительность каждого кадра в миллисекундах
     unsigned long frameDuration[numFrames] = { timeDelay, timeDelay, timeDelay, timeDelay, timeDelay, timeDelay };
-  
-  for (int frame = 0; frame < numFrames; frame++) {
-    // Отрисовка текущего кадра
-    arduboy.drawBitmap(frameX[frame], frameY[frame], brokenEggLEFT[frame], frameWidth[frame], frameHeight[frame], WHITE);
-    arduboy.display();
-    // Задержка для каждого кадра
-    delay(frameDuration[frame]);
-    // Очистка текущего кадра
-    arduboy.fillRect(frameX[frame], frameY[frame], frameWidth, frameHeight, BLACK);
+    for (int frame = 0; frame < numFrames; frame++) {
+
+      arduboy.drawBitmap(frameX[frame], frameY[frame], brokenEggLEFT[frame], frameWidth[frame], frameHeight[frame], WHITE);
+      arduboy.display();
+      delay(frameDuration[frame]);
+   
+      arduboy.fillRect(frameX[frame], frameY[frame], frameWidth, frameHeight, BLACK);
   }
 }
 
-// мультик c левым яйцом
+
 void brokenEggLeft() {
   eggAnimationLeft();
 }
 
 void eggAnimationRight() {
-    // Количество кадров анимации
     const int numFrames = 6;
-    // Размер каждого кадра
-    //const int frameWidth = 12;
-    //const int frameHeight = 12;
     int timeDelay = 450;
-    // Координаты для отображения каждого кадра
     int frameX[numFrames] = { 66, 66, 78, 92, 105, 116 };
     int frameY[numFrames] = { 50, 50, 50, 50, 50, 50 };
 
     int frameWidth[numFrames] = {10, 11, 14, 13, 11, 12};
     int frameHeight[numFrames] = {12, 10, 13, 10, 10, 12};
-    
-    // Длительность каждого кадра в миллисекундах
     unsigned long frameDuration[numFrames] = { timeDelay, timeDelay, timeDelay, timeDelay, timeDelay, timeDelay };
-  
   for (int frame = 0; frame < numFrames; frame++) {
-    // Отрисовка текущего кадра
     arduboy.drawBitmap(frameX[frame], frameY[frame], brokenEggRIGHT[frame], frameWidth[frame], frameHeight[frame], WHITE);
     arduboy.display();
-    // Задержка для каждого кадра
     delay(frameDuration[frame]);
     // Очистка текущего кадра
     arduboy.fillRect(frameX[frame], frameY[frame], frameWidth, frameHeight, BLACK);
   }
 }
 
-// мультик c правым яйцом
 void brokenEggRight() {
   eggAnimationRight();
 }
-
-/*
-void clearEggArea(int x, int y, int width, int height) {
-  //arduboy.fillRect(x, y, width, height, BLACK);
-  arduboy.drawRect(x, y, width, height, BLACK);
-}
-
-void brokenEggLeft() {
-  uint8_t frame = 0; // переменная для отслеживания текущего кадра
-  //uint8_t tab = 0;
-  uint8_t clearAreasFrame[][4] = {
-    {53, 50, 10, 12}, //frame 1
-    {53, 50, 11, 10}, //frame 2
-    {39, 50, 14, 13}, //..
-    {25, 50, 13, 10},
-    {12, 50, 11, 10},
-    {0, 50, 12, 12}
-  };
-
-  //while (frame < 6) {
-  for (uint8_t frame = 0; frame < 6; frame++) {
-    // очистка предыдущего местоположения
-    clearEggArea(clearAreasFrame[frame][0], clearAreasFrame[frame][1], clearAreasFrame[frame][2], clearAreasFrame[frame][3]);
-    switch (frame) {
-      case 0: 
-        
-        arduboy.drawBitmap(53, 50, eggLeft_Right, 10, 12);
-        break;
-      case 1:
-        //clearEggArea(clearAreasFrame[frame][0], clearAreasFrame[frame][1], clearAreasFrame[frame][2], clearAreasFrame[frame][3]);
-        arduboy.drawBitmap(53, 50, eggLeft_2, 11, 10);
-        break;
-      case 2:
-        //clearEggArea(clearAreasFrame[frame][0], clearAreasFrame[frame][1], clearAreasFrame[frame][2], clearAreasFrame[frame][3]);
-        arduboy.drawBitmap(39, 50, eggLeft_3, 14, 13);
-        break;
-      case 3:
-        //clearEggArea(clearAreasFrame[frame][0], clearAreasFrame[frame][1], clearAreasFrame[frame][2], clearAreasFrame[frame][3]);
-        arduboy.drawBitmap(25, 50, eggLeft_4, 13, 10);
-        break;
-      case 4:
-       // clearEggArea(clearAreasFrame[frame][0], clearAreasFrame[frame][1], clearAreasFrame[frame][2], clearAreasFrame[frame][3]);
-        arduboy.drawBitmap(12, 50, eggLeft_5, 11, 10);
-        break;
-      case 5:
-        //clearEggArea(clearAreasFrame[frame][0], clearAreasFrame[frame][1], clearAreasFrame[frame][2], clearAreasFrame[frame][3]);
-        arduboy.drawBitmap(0, 50, eggLeft_6, 12, 12);
-        break;
-    }
-    arduboy.display(); // отображение текущего рисунка яйца
-    delay(450);
-    frame++; // увеличение значения frame для переключения на следующий кадр
-  }
-}
-*/
-
-
-/*
-void brokenEggRight() {
-//brokenEggRight[];
-arduboy.drawBitmap(66, 50, eggLeft_Right, 10, 12);
-arduboy.drawBitmap(66, 50, eggRight_2, 11, 10);
-arduboy.drawBitmap(78, 50, eggRight_3, 14, 13);
-arduboy.drawBitmap(92, 50, eggRight_4, 13, 10);
-arduboy.drawBitmap(105, 50, eggRight_5, 11, 10);
-arduboy.drawBitmap(116, 50, eggRight_6, 12, 12);
-arduboy.display();
-}
-*/
-
 
 void callingRabbit() {
   int frameCount = 6;
   int frameDelay = 300;
 
   for (int i = 0; i < frameCount; i++) {
-    //arduboy.clear();
     arduboy.fillRect(10, 0, RABBIT_WIDTH, RABBIT_HEIGHT, BLACK);
-
     arduboy.drawBitmap(10, 0, rabbits[i], RABBIT_WIDTH, RABBIT_HEIGHT, 1);
-
     arduboy.display();
     arduboy.delayShort(frameDelay);
 
@@ -661,7 +477,7 @@ void callingRabbit() {
 void playDinRabbit() {
   int frameDelay = 30;
  // for (int i = 1568; i > 750; i--) {
-  sound.tone(1568, 100); // динь
+  sound.tone(1568, 100); 
  // }
   arduboy.delayShort(frameDelay);
   sound.noTone();
@@ -670,13 +486,11 @@ void playDinRabbit() {
 void playDonRabbit() {
   int frameDelay = 30;
   //for (int i = 784; i > 600; i--) {
-  sound.tone(784, 100); // дон
+  sound.tone(784, 100); 
  // }
   arduboy.delayShort(frameDelay);
   sound.noTone();
 }
-
-
 
 ////debug
 void playBellRabbit_7(){
@@ -690,8 +504,6 @@ void playBellRabbit_7(){
   
   sound.noTone();
 }
-
-
 
 void playClickSound() {
   for (int i = 1200; i > 250; i--) {
